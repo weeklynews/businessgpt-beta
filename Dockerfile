@@ -2,11 +2,16 @@ FROM golang:1.21-alpine
 
 WORKDIR /app
 
-# Copy files
+# Copy go.mod first
+COPY go.mod ./
+
+# Download dependencies (this will generate go.sum)
+RUN go mod download
+
+# Copy the rest of the source code
 COPY . .
 
-# Download dependencies and build
-RUN go mod download
+# Build the application
 RUN go build -o main .
 
 # Expose port
